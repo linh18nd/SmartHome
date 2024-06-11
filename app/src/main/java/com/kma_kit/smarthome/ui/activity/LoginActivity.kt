@@ -1,17 +1,16 @@
 package com.kma_kit.smarthome.ui.activity
 
 import android.os.Bundle
-import android.view.View
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import com.google.android.material.snackbar.Snackbar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.lifecycle.lifecycleScope
 import com.kma_kit.smarthome.R
-import com.kma_kit.smarthome.databinding.ActivityLoginBinding
+import com.kma_kit.smarthome.data.model.request.UserAuth
+import com.kma_kit.smarthome.repository.UserRepository
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     lateinit var edtUserName: EditText
@@ -24,5 +23,31 @@ class LoginActivity : AppCompatActivity() {
         edtUserName = findViewById(R.id.username)
         edtPassword = findViewById(R.id.password)
         btnLogin = findViewById(R.id.loginButton)
+        configureListeners()
+    }
+
+    fun configureListeners() {
+        btnLogin.setOnClickListener {
+            Log.d("LoginActivity", "Login button clicked")
+            lifecycleScope.launch {
+                login()
+            }
+        }
+    }
+
+    suspend fun login() {
+        val username = edtUserName.text.toString()
+        val password = edtPassword.text.toString()
+        val userAuth = UserAuth(username, password, "admin")
+        val authResponse = UserRepository().loginUser(userAuth)
+        if (authResponse.fcm_token != null) {
+            // Login success
+            Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show()
+        } else {
+            // Login failed
+            Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
+        }
+
+
     }
 }
