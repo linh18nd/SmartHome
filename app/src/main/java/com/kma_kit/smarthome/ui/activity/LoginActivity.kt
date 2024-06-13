@@ -1,5 +1,6 @@
 package com.kma_kit.smarthome.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -42,7 +43,9 @@ class LoginActivity : AppCompatActivity() {
         val authResponse = UserRepository().loginUser(userAuth)
         if (authResponse.fcm_token != null) {
             // Login success
-            Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, HomeScreenActivity::class.java)
+            startActivity(intent)
         } else {
             // Login failed
             Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
