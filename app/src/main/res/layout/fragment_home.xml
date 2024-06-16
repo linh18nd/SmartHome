@@ -15,7 +15,7 @@
         android:background="@color/topAppBarColor"
         app:layout_constraintTop_toTopOf="parent"
         app:title="Beach House"
-        app:titleTextColor="@color/white" />
+        app:titleTextColor="@color/textColor" />
 
     <!-- TabLayout for Room selection -->
     <com.google.android.material.tabs.TabLayout
@@ -27,6 +27,7 @@
         app:layout_constraintTop_toBottomOf="@id/topAppBar"
         app:tabIndicatorColor="@color/activeTabColor"
         app:tabSelectedTextColor="@color/activeTabColor"
+        android:background="@color/backgroundColor"
         app:tabTextColor="@color/inactiveTabColor">
 
         <com.google.android.material.tabs.TabItem
@@ -93,7 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="26°C"
-                        android:textColor="@color/white"
+                        android:textColor="@color/textColor"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -101,7 +102,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Temperature"
-                        android:textColor="@color/white"
+                        android:textColor="@color/textColor"
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -129,7 +130,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="35%"
-                        android:textColor="@color/white"
+                        android:textColor="@color/textColor"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -137,7 +138,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Humidity"
-                        android:textColor="@color/white"
+                        android:textColor="@color/textColor"
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -164,7 +165,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="256K"
-                        android:textColor="@color/white"
+                        android:textColor="@color/textColor"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -172,7 +173,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Energy Usage"
-                        android:textColor="@color/white"
+                        android:textColor="@color/textColor"
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -198,7 +199,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="80%"
-                        android:textColor="@color/white"
+                        android:textColor="@color/textColor"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -206,7 +207,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Light"
-                        android:textColor="@color/white"
+                        android:textColor="@color/textColor"
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>

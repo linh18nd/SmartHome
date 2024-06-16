@@ -4,14 +4,15 @@
     <color name="white">#FFFFFFFF</color>
     <color name="purple">#8692f7</color>
     <color name="lavender">#e6e6fa</color>
-    <color name="backgroundColor">#2C2F33</color>
-    <color name="topAppBarColor">#23272A</color>
-    <color name="cardBackgroundColor">#36393F</color>
-    <color name="activeTabColor">#43B581</color>
+    <color name="backgroundColor">#EFF1F5</color>
+    <color name="topAppBarColor">#EFF1F5</color>
+    <color name="cardBackgroundColor">#F5F7FB</color>
+    <color name="activeTabColor">#8692f7</color>
     <color name="inactiveTabColor">#99AAB5</color>
-    <color name="bottomNavColor">#23272A</color>
+    <color name="bottomNavColor">#EFF1F5</color>
     <color name="navItemColor">#99AAB5</color>
-    <color name="switchThumbColor">#43B581</color>
-    <color name="switchTrackColor">#99AAB5</color>
+    <color name="switchThumbColor">#8692f7</color>
+    <color name="switchTrackColor">#D4D3E3</color>
     <color name="gray">#99AAB5</color>
+    <color name="textColor">#86878D</color>
 </resources>
