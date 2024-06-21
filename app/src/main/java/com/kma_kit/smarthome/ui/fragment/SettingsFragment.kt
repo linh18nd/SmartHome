@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.kma_kit.smarthome.R
+import com.kma_kit.smarthome.ui.activity.ChangePasswordActivity
 import com.kma_kit.smarthome.ui.activity.HomeScreenActivity
 import com.kma_kit.smarthome.ui.activity.LoginActivity
 
@@ -33,10 +34,19 @@ class SettingsFragment : Fragment() {
             startActivity(browserIntent)
         }
 
-        logoutButton.setOnClickListener {
-            val intent = Intent(LoginActivity(),LoginActivity::class.java)
+        changePasswordButton.setOnClickListener {
+            val context = requireContext()
+            val intent = Intent(context, ChangePasswordActivity::class.java)
             startActivity(intent)
         }
+
+        logoutButton.setOnClickListener {
+            val context = requireContext()
+            val intent = Intent(context, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
+
         return  view
     }
 }
