@@ -49,8 +49,11 @@
     <string name="account_settings">Account Settings</string>
     <string name="change_password">Change Password</string>
     <string name="logout">Logout</string>
-    <string name = "about_me">About me</string>
+    <string name="about_me">About me</string>
     <string name="change_user_name">Change Username</string>
     <string name="username">Username</string>
+    <string name="insert_old_password">Insert Old Password</string>
+    <string name="insert_new_password">Insert New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
 
 </resources>

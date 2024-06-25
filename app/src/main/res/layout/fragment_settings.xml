@@ -79,7 +79,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="16dp"
                         app:tint="@color/purple"
-                        android:src="@drawable/ic_home" />
+                        android:src="@drawable/ic_notification" />
 
                     <Switch
                         android:id="@+id/switch_notifications"
@@ -139,6 +139,7 @@
 
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/about_me_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -173,6 +174,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/change_username_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -207,6 +209,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/change_password_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -241,6 +244,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/logout_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
