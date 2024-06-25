@@ -5,32 +5,50 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.fragment.app.commit
+import com.google.android.material.tabs.TabLayout
 import com.kma_kit.smarthome.R
-import com.kma_kit.smarthome.data.entity.DeviceTabbar
-import com.kma_kit.smarthome.ui.adapter.DeviceAdapter
 
 class HomeFragment : Fragment() {
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        // Khởi tạo danh sách thiết bị mẫu
-        val devices = listOf(
-            DeviceTabbar("Light", "Phillips hue", true),
-            DeviceTabbar("Air Conditioner", "LG S3", false),
-            DeviceTabbar("Smart TV", "LG A1", false),
-            DeviceTabbar("Router", "D-link 422", true)
-        )
+        val tabLayout: TabLayout = view.findViewById(R.id.tabLayout)
 
-        // Khởi tạo và thiết lập Adapter cho RecyclerView
-        var deviceAdapter = DeviceAdapter(devices)
-        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
-        recyclerView.adapter = deviceAdapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        // Set initial fragment
+        if (savedInstanceState == null) {
+            childFragmentManager.commit {
+                replace(R.id.fragmentContainer, AllFragment())
+            }
+        }
+
+        // Set up tab selected listener
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                val selectedFragment = when (tab.position) {
+                    0 -> AllFragment()
+                    1 -> LivingRoomFragment()
+                    2 -> KitchenFragment()
+                    3 -> BathroomFragment()
+                    else -> AllFragment()
+                }
+                childFragmentManager.commit {
+                    replace(R.id.fragmentContainer, selectedFragment)
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+                // Do nothing
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab) {
+                // Do nothing
+            }
+        })
 
         return view
     }
