@@ -17,7 +17,7 @@ object ApiClient {
 
     private val retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("http://localhost:8000//api/")
+            .baseUrl("https://yearly-casual-sawfly.ngrok-free.app/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

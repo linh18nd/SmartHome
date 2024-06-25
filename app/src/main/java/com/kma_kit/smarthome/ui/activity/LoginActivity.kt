@@ -1,5 +1,6 @@
 package com.kma_kit.smarthome.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -7,6 +8,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.kma_kit.smarthome.ui.activity.HomeScreenActivity
 import com.kma_kit.smarthome.R
 import com.kma_kit.smarthome.data.model.request.UserAuth
 import com.kma_kit.smarthome.repository.UserRepository
@@ -39,14 +41,13 @@ class LoginActivity : AppCompatActivity() {
         val username = edtUserName.text.toString()
         val password = edtPassword.text.toString()
         val userAuth = UserAuth(username, password, "admin")
-        val authResponse = UserRepository().loginUser(userAuth)
-        if (authResponse.fcm_token != null) {
-            // Login success
-            Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show()
-        } else {
-            // Login failed
-            Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
-        }
+//        val authResponse = UserRepository().loginUser(userAuth)
+//        print(0);
+//        print(1);
+        // Login success
+//            Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, HomeScreenActivity::class.java)
+        startActivity(intent)
 
 
     }
