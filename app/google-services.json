@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "311623355560",
+    "project_id": "rtos-ad71f",
+    "storage_bucket": "rtos-ad71f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311623355560:android:16869ed2da30a557a7469d",
+        "android_client_info": {
+          "package_name": "kit.rtos.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXedUc30gW7ENEw0Uv0GrRKeh_oJzkmac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

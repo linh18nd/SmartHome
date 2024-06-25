@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+alias(libs.plugins.googleServices)
 }
 
 android {
@@ -8,7 +9,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.kma_kit.smarthome"
+        applicationId = "kit.rtos.app"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -54,4 +55,5 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(libs.firebaseMessaging)
 }
