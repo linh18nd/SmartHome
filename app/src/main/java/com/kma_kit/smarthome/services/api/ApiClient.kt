@@ -13,6 +13,14 @@ object ApiClient {
 
     private val client = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
+        .addInterceptor { chain ->
+            val preferencesHelper = PreferencesHelper.getInstance()
+            val token = preferencesHelper.authToken
+            val request = chain.request().newBuilder()
+                .addHeader("Authorization", "Bearer $token")
+                .build()
+            chain.proceed(request)
+        }
         .build()
 
     private val retrofit by lazy {

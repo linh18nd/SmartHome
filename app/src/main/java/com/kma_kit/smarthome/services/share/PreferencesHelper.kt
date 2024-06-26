@@ -1,13 +1,25 @@
+@file:Suppress("DEPRECATION")
+
 import android.content.Context
-import android.content.SharedPreferences
+import android.preference.PreferenceManager
+import com.kma_kit.smarthome.ui.SmartHomeApplication
 
-class PreferencesHelper(context: Context) {
-
-    private val preferences: SharedPreferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE)
+class PreferencesHelper private constructor() {
 
     companion object {
+        @Volatile
+        private var INSTANCE: PreferencesHelper? = null
+
+        fun getInstance(): PreferencesHelper {
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: PreferencesHelper().also { INSTANCE = it }
+            }
+        }
+
         private const val KEY_AuthToken = "auth_token"
     }
+
+    private val preferences = PreferenceManager.getDefaultSharedPreferences(SmartHomeApplication.getAppContext())
 
     var authToken: String?
         get() = preferences.getString(KEY_AuthToken, null)
@@ -15,6 +27,5 @@ class PreferencesHelper(context: Context) {
 
     fun clear() {
         preferences.edit().clear().apply()
-
     }
 }
