@@ -1,18 +1,24 @@
 package com.kma_kit.smarthome.ui.activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.kma_kit.smarthome.ui.activity.HomeScreenActivity
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.Constants.TAG
+import com.google.firebase.messaging.FirebaseMessaging
 import com.kma_kit.smarthome.R
 import com.kma_kit.smarthome.data.model.request.UserAuth
 import com.kma_kit.smarthome.repository.UserRepository
+import com.kma_kit.smarthome.ui.common.handleApiError
 import kotlinx.coroutines.launch
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class LoginActivity : AppCompatActivity() {
     lateinit var edtUserName: EditText
@@ -28,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
         configureListeners()
     }
 
-    fun configureListeners() {
+    private fun configureListeners() {
         btnLogin.setOnClickListener {
             Log.d("LoginActivity", "Login button clicked")
             lifecycleScope.launch {
@@ -37,18 +43,41 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    suspend fun login() {
+    private suspend fun login() {
+        var token = getToken()
         val username = edtUserName.text.toString()
         val password = edtPassword.text.toString()
-        val userAuth = UserAuth(username, password, "admin")
-//        val authResponse = UserRepository().loginUser(userAuth)
-//        print(0);
-//        print(1);
-        // Login success
-//            Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show()
-        val intent = Intent(this, HomeScreenActivity::class.java)
-        startActivity(intent)
+        val userAuth = UserAuth(username, password, token.toString())
+        val response = UserRepository().loginUser(userAuth)
+        if (response.isSuccessful) {
+            val authResponse = response.body()
+            if (authResponse != null) {
+                Log.d("LoginActivity", "Login successful")
+                val intent = Intent(this, HomeScreenActivity::class.java)
+                val preferencesHelper = PreferencesHelper.getInstance()
+                preferencesHelper.authToken = authResponse.access
 
+                startActivity(intent)
+            }
+        } else {
+            Log.d("LoginActivity", "Login failed")
+            val view = findViewById<View>(android.R.id.content)
+            handleApiError(response.errorBody(), view)
+        }
+    }
 
+    private suspend fun getToken(): String {
+        return suspendCoroutine { continuation ->
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                    continuation.resume("")
+                } else {
+                    val token = task.result.toString()
+                    Log.d(TAG, "Token_fcm: $token")
+                    continuation.resume(token)
+                }
+            })
+        }
     }
 }
