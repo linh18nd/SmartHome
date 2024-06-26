@@ -55,5 +55,7 @@
     <string name="insert_old_password">Insert Old Password</string>
     <string name="insert_new_password">Insert New Password</string>
     <string name="confirm_new_password">Confirm New Password</string>
+    <string name="default_notification_channel_id">noti_fcm</string>
+    <string name="default_notification_channel_name">fcm</string>
 
 </resources>
