@@ -1,12 +1,14 @@
 package com.kma_kit.smarthome.services.api
 
 import com.kma_kit.smarthome.data.model.request.ChangePassword
+import com.kma_kit.smarthome.data.model.request.UpdateUser
 import com.kma_kit.smarthome.data.model.request.UserAuth
 import com.kma_kit.smarthome.data.model.response.AuthResponse
 import com.kma_kit.smarthome.data.model.response.UserResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 
@@ -21,5 +23,8 @@ interface ApiService {
 
     @PUT("user/change-password/")
     suspend fun changePassword(@Body changePassword: ChangePassword) : Response<Void>
+
+    @PATCH("user/update-details/")
+    suspend fun updateDetails(@Body user: UpdateUser): Response<UserResponse>
 
 }
