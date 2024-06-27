@@ -1,22 +1,31 @@
 package com.kma_kit.smarthome.ui.activity
 
+import RootController
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.kma_kit.smarthome.R
 import com.kma_kit.smarthome.ui.fragment.HomeFragment
 import com.kma_kit.smarthome.ui.fragment.SettingsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.kma_kit.smarthome.data.model.response.UserResponse
+import com.kma_kit.smarthome.repository.UserRepository
+import kotlinx.coroutines.launch
 
 class HomeScreenActivity : AppCompatActivity() {
 
-    private lateinit var bottomNavigationView: BottomNavigationView // Declare lateinit
+    private lateinit var bottomNavigationView: BottomNavigationView //
+    private lateinit var userResponse: UserResponse
+    private val rootController: RootController by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_screen)
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView) // Initialize from layout
+        onInitData()
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -24,6 +33,7 @@ class HomeScreenActivity : AppCompatActivity() {
                     replaceFragment(HomeFragment())
                     return@setOnNavigationItemSelectedListener true
                 }
+
                 R.id.nav_settings -> {
                     replaceFragment(SettingsFragment())
                     return@setOnNavigationItemSelectedListener true
@@ -43,5 +53,14 @@ class HomeScreenActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
             .commit()
+    }
+
+    private fun onInitData() {
+         lifecycleScope.launch {
+                rootController.fetchUserInfo()
+                rootController.userInfo.observe(this@HomeScreenActivity) {
+                    userResponse = it
+                }
+         }
     }
 }

@@ -19,20 +19,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-
-        // Xử lý khi nhận được thông báo từ FCM
-        Log.d(TAG, "From: ${remoteMessage.from}")
-
-        // Kiểm tra nếu message chứa data payload
         remoteMessage.data.isNotEmpty().let {
             Log.d(TAG, "Message data payload: " + remoteMessage.data)
-
-            // Xử lý các thông tin từ data payload nếu cần
-            // Ví dụ: val title = remoteMessage.data["title"]
-            // val message = remoteMessage.data["message"]
         }
 
-        // Kiểm tra nếu message chứa notification payload
         remoteMessage.notification?.let {
             Log.d(TAG, "Message Notification Body: ${it.body}")
             showNotification(it.title ?: "FCM Message", it.body ?: "")
@@ -48,7 +38,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun sendRegistrationToServer(token: String?) {
-        // Implement this method to send token to your app server
         Log.d(TAG, "sendRegistrationTokenToServer($token)")
     }
 
@@ -71,7 +60,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // Kiểm tra nếu thiết bị chạy Android Oreo (API 26) trở lên, cần tạo Notification Channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(channelId,
                 getString(R.string.default_notification_channel_name),
@@ -79,7 +67,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationManager.createNotificationChannel(channel)
         }
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
+        notificationManager.notify(0, notificationBuilder.build())
     }
 
     companion object {
