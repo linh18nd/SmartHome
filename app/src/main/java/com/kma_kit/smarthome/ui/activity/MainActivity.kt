@@ -17,7 +17,19 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         Thread.sleep(3000)
 
-        val intent = Intent(this, LoginActivity::class.java)
+        navigate()
         startActivity(intent)
+    }
+
+    fun navigate () {
+        val preferencesHelper = PreferencesHelper.getInstance()
+        if (preferencesHelper.authToken != null) {
+            val intent = Intent(this, HomeScreenActivity::class.java)
+            startActivity(intent)
+        }
+        else {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

@@ -17,13 +17,19 @@ class PreferencesHelper private constructor() {
         }
 
         private const val KEY_AuthToken = "auth_token"
+        private const val KEY_enable_dark_mode = "enable_dark_mode"
     }
 
-    private val preferences = PreferenceManager.getDefaultSharedPreferences(SmartHomeApplication.getAppContext())
+    private val preferences =
+        PreferenceManager.getDefaultSharedPreferences(SmartHomeApplication.getAppContext())
 
     var authToken: String?
         get() = preferences.getString(KEY_AuthToken, null)
         set(value) = preferences.edit().putString(KEY_AuthToken, value).apply()
+
+    var enableDarkMode: Boolean
+        get() = preferences.getBoolean(KEY_enable_dark_mode, false)
+        set(value) = preferences.edit().putBoolean(KEY_enable_dark_mode, value).apply()
 
     fun clear() {
         preferences.edit().clear().apply()
