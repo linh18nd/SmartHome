@@ -17,7 +17,11 @@ import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.Constants
+import com.google.firebase.messaging.FirebaseMessaging
 import com.kma_kit.smarthome.R
+import com.kma_kit.smarthome.data.model.request.UpdateUser
 import com.kma_kit.smarthome.data.model.response.UserResponse
 import com.kma_kit.smarthome.repository.UserRepository
 import com.kma_kit.smarthome.ui.activity.ChangePasswordActivity
@@ -25,6 +29,8 @@ import com.kma_kit.smarthome.ui.activity.HomeScreenActivity
 import com.kma_kit.smarthome.ui.activity.LoginActivity
 import kotlinx.coroutines.launch
 import okio.IOException
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class SettingsFragment : Fragment() {
     private lateinit var aboutMeButton: CardView
@@ -32,9 +38,9 @@ class SettingsFragment : Fragment() {
     private lateinit var changePasswordButton: CardView
     private lateinit var logoutButton: CardView
     private lateinit var avatar: ImageView
-    private lateinit var userName : TextView
-    private lateinit var enableNoti : Switch
-    private lateinit var enableDarkMode : Switch
+    private lateinit var userName: TextView
+    private lateinit var enableNoti: Switch
+    private lateinit var enableDarkMode: Switch
     private val rootController: RootController by activityViewModels()
 
     override fun onCreateView(
@@ -59,7 +65,8 @@ class SettingsFragment : Fragment() {
         enableDarkMode = view.findViewById(R.id.switch_dark_mode)
         rootController.userInfo.observe(viewLifecycleOwner) {
             userName.text = it.first_name + " " + it.last_name
-            enableNoti.isEnabled = it.fcm_token.isNotEmpty()
+            Log.d("SettingsFragment", "User info: $it")
+            enableNoti.isChecked = it.fcm_token.isNotEmpty()
 
         }
         val preferencesHelper = PreferencesHelper.getInstance()
@@ -77,13 +84,28 @@ class SettingsFragment : Fragment() {
     }
 
 
-
     private fun listenerEvent() {
         enableNoti.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
+            lifecycleScope.launch {
+                var fcmToken = ""
+                if (isChecked) {
+                    fcmToken = getToken()
+                }
 
-            } else {
+                val user = rootController.userInfo.value
+                val updatedUser = user?.let {
+                    UpdateUser(
+                        it.first_name,
+                        user.last_name,
+                        user.date_of_birth,
+                        user.gender,
+                        fcmToken
+                    )
+                }
 
+                if (updatedUser != null) {
+                    rootController.updateUserInfo(updatedUser)
+                }
             }
         }
 
@@ -114,6 +136,21 @@ class SettingsFragment : Fragment() {
             preferencesHelper.clear()
             val intent = Intent(context, LoginActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private suspend fun getToken(): String {
+        return suspendCoroutine { continuation ->
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(Constants.TAG, "Fetching FCM registration token failed", task.exception)
+                    continuation.resume("")
+                } else {
+                    val token = task.result.toString()
+                    Log.d(Constants.TAG, "Token_fcm: $token")
+                    continuation.resume(token)
+                }
+            })
         }
     }
 }
