@@ -78,17 +78,22 @@
                         android:layout_height="24dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="16dp"
+
                         app:tint="@color/purple"
                         android:src="@drawable/ic_notification" />
 
                     <Switch
                         android:id="@+id/switch_notifications"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:track="@drawable/custom_track"
+                        android:thumb="@drawable/custom_thumb"
                         android:layout_weight="1"
                         android:text="@string/enable_notifications"
                         android:textColor="@color/textColor"
-                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+                        tools:ignore="UseSwitchCompatOrMaterialXml"
+                        />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -118,9 +123,11 @@
                     <Switch
 
                         android:id="@+id/switch_dark_mode"
-                        android:layout_width="291dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
+                        android:layout_centerInParent="true"
+                        android:track="@drawable/custom_track"
+                        android:thumb="@drawable/custom_thumb"
                         android:layout_weight="1"
                         android:text="@string/enable_dark_mode"
                         android:textColor="@color/textColor"

@@ -66,6 +66,25 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkValidate(){
+        if (edtUserName.text.toString().isEmpty()){
+            edtUserName.error = "Please enter username"
+            return
+        }
+        if(edtUserName.text.toString().length < 6){
+            edtUserName.error = "Username must be at least 6 characters"
+            return
+        }
+        if (edtPassword.text.toString().isEmpty()){
+            edtPassword.error = "Please enter password"
+            return
+        }
+        if(edtPassword.text.toString().length < 6){
+            edtPassword.error = "Password must be at least 6 characters"
+            return
+        }
+    }
+
     private suspend fun getToken(): String {
         return suspendCoroutine { continuation ->
             FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->

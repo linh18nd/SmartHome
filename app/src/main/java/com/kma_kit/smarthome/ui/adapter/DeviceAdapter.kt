@@ -1,5 +1,6 @@
 package com.kma_kit.smarthome.ui.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,8 @@ class DeviceAdapter(private val devices: List<DeviceTabbar>) : RecyclerView.Adap
     class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val deviceName: TextView = itemView.findViewById(R.id.deviceName)
         val deviceType: TextView = itemView.findViewById(R.id.deviceType)
-        val deviceSwitch: SwitchCompat = itemView.findViewById(R.id.deviceSwitch)
+        @SuppressLint("UseSwitchCompatOrMaterialCode")
+        val deviceSwitch: Switch = itemView.findViewById(R.id.deviceSwitch)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceViewHolder {

@@ -27,12 +27,13 @@
         android:textSize="14sp"
         android:layout_marginBottom="8dp" />
 
-    <androidx.appcompat.widget.SwitchCompat
+    <Switch
         android:id="@+id/deviceSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:thumb="@drawable/custom_thumb"
-        app:track="@drawable/custom_track" />
+        android:track="@drawable/custom_track"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
 </GridLayout>

@@ -15,4 +15,5 @@
     <color name="switchTrackColor">#D4D3E3</color>
     <color name="gray">#99AAB5</color>
     <color name="textColor">#8692f7</color>
+    <color name="switchTrackOffColor">#E5E5EA</color>
 </resources>
