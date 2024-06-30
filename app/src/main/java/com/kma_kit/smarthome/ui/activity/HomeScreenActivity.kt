@@ -11,7 +11,7 @@ import com.kma_kit.smarthome.ui.fragment.HomeFragment
 import com.kma_kit.smarthome.ui.fragment.SettingsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kma_kit.smarthome.data.model.response.UserResponse
-import com.kma_kit.smarthome.repository.UserRepository
+import com.kma_kit.smarthome.ui.fragment.UserInfoFragment
 import kotlinx.coroutines.launch
 
 class HomeScreenActivity : AppCompatActivity() {
@@ -36,6 +36,11 @@ class HomeScreenActivity : AppCompatActivity() {
 
                 R.id.nav_settings -> {
                     replaceFragment(SettingsFragment())
+                    return@setOnNavigationItemSelectedListener true
+                }
+
+                R.id.nav_users -> {
+                    replaceFragment(UserInfoFragment())
                     return@setOnNavigationItemSelectedListener true
                 }
                 // Add more cases for other bottom navigation items here

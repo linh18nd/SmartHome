@@ -4,6 +4,7 @@ import com.kma_kit.smarthome.data.model.request.ChangePassword
 import com.kma_kit.smarthome.data.model.request.UpdateUser
 import com.kma_kit.smarthome.data.model.request.UserAuth
 import com.kma_kit.smarthome.data.model.response.AuthResponse
+import com.kma_kit.smarthome.data.model.response.HomeResponse
 import com.kma_kit.smarthome.data.model.response.UserResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -26,5 +27,9 @@ interface ApiService {
 
     @PATCH("user/update-details/")
     suspend fun updateDetails(@Body user: UpdateUser): Response<UserResponse>
+
+    @GET("home/my")
+    suspend fun getDevices(): Response<HomeResponse>
+
 
 }

@@ -6,18 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Switch
 import android.widget.TextView
-import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.kma_kit.smarthome.R
-import com.kma_kit.smarthome.data.entity.DeviceTabbar
+import com.kma_kit.smarthome.data.model.response.Device
 
-class DeviceAdapter(private val devices: List<DeviceTabbar>) : RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>() {
+class DeviceAdapter(private val devices: List<Device>) : RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>() {
 
-    class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val deviceName: TextView = itemView.findViewById(R.id.deviceName)
         val deviceType: TextView = itemView.findViewById(R.id.deviceType)
         @SuppressLint("UseSwitchCompatOrMaterialCode")
         val deviceSwitch: Switch = itemView.findViewById(R.id.deviceSwitch)
+
+        var switchListener: ((Boolean) -> Unit)? = null
+
+        init {
+            deviceSwitch.setOnCheckedChangeListener { _, isChecked ->
+                switchListener?.invoke(isChecked)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceViewHolder {
@@ -26,10 +33,16 @@ class DeviceAdapter(private val devices: List<DeviceTabbar>) : RecyclerView.Adap
     }
 
     override fun onBindViewHolder(holder: DeviceViewHolder, position: Int) {
-        val device = devices[position]
+        var device = devices[position]
         holder.deviceName.text = device.name
-        holder.deviceType.text = device.type
-        holder.deviceSwitch.isChecked = device.isOn
+        holder.deviceType.text = device.deviceType
+        holder.deviceSwitch.isChecked = device.isAuto
+
+        holder.switchListener = { isChecked ->
+            // Xử lý sự kiện khi Switch thay đổi trạng thái (isChecked là trạng thái mới của Switch)
+            device.isAuto = isChecked
+            // Gọi hàm hoặc thông báo về bên ngoài (nếu cần)
+        }
     }
 
     override fun getItemCount(): Int {

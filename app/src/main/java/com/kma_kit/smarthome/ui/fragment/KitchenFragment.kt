@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kma_kit.smarthome.R
-import com.kma_kit.smarthome.data.entity.DeviceTabbar
+import com.kma_kit.smarthome.data.model.response.Device
 import com.kma_kit.smarthome.ui.adapter.DeviceAdapter
 
 class KitchenFragment : Fragment() {
@@ -21,7 +21,7 @@ class KitchenFragment : Fragment() {
 
         // Khởi tạo danh sách thiết bị mẫu
         val devices = listOf(
-            DeviceTabbar("Refrigerator", "Samsung Smart Fridge", true)
+            Device("Water Heater", "Bosch Tronic 3000", false,"hehe",1.0)
         )
 
         // Khởi tạo và thiết lập Adapter cho RecyclerView
