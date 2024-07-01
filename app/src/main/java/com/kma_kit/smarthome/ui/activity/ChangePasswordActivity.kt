@@ -1,10 +1,12 @@
 package com.kma_kit.smarthome.ui.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.lifecycleScope
 import com.kma_kit.smarthome.R
 import com.kma_kit.smarthome.data.model.request.ChangePassword
@@ -47,8 +49,18 @@ class ChangePasswordActivity : AppCompatActivity() {
                         response = UserRepository().changePassword(changePassword)
                         if (response.isSuccessful) {
                             showSnackbar(view, "Password changed successfully")
+
+                            val preferencesHelper = PreferencesHelper.getInstance()
+                            preferencesHelper.clear()
+                            val intent =
+                                Intent(this@ChangePasswordActivity, LoginActivity::class.java)
+                            intent.flags =
+                                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish() // Đóng activity hiện tại
                         }
                     } catch (e: Exception) {
+                        // Xử lý lỗi nếu có
 
                     }
                 }
