@@ -21,7 +21,7 @@ interface ApiService {
     @PUT("user/me/")
     suspend fun updateUser(@Body user: UserResponse): Response<UserResponse>
 
-    @PUT("user/change-password/")
+    @POST("user/change-password/")
     suspend fun changePassword(@Body changePassword: ChangePassword) : Response<Void>
 
     @PATCH("user/update-details/")
