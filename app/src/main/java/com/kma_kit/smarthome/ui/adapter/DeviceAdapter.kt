@@ -38,12 +38,12 @@ class DeviceAdapter(
     override fun onBindViewHolder(holder: DeviceViewHolder, position: Int) {
         val device = devices[position]
         holder.deviceName.text = device.name
-        holder.deviceType.text = device.deviceType
-        holder.deviceSwitch.isChecked = device.isAuto
+        holder.deviceType.text = device.device_type
+        holder.deviceSwitch.isChecked = device.is_auto
 
         holder.switchListener = { isChecked ->
             // Cập nhật trạng thái của thiết bị
-            device.isAuto = isChecked
+            device.is_auto = isChecked
             // Gọi callback để thông báo về bên ngoài
             onSwitchClickListener(device, isChecked)
         }
