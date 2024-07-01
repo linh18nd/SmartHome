@@ -1,5 +1,6 @@
 package com.kma_kit.smarthome.services.api
 
+import UpdateDeviceRequest
 import com.kma_kit.smarthome.data.model.request.ChangePassword
 import com.kma_kit.smarthome.data.model.request.UpdateUser
 import com.kma_kit.smarthome.data.model.request.UserAuth
@@ -12,6 +13,8 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
+import retrofit2.http.Path
 
 interface ApiService {
     @GET("user/me/")
@@ -31,5 +34,10 @@ interface ApiService {
     @GET("home/my")
     suspend fun getDevices(): Response<HomeResponse>
 
+    @PATCH("/api/home/device/{id}/update/")
+    suspend fun updateDeviceState(
+        @Path("id") id: String,
+        @Body request: UpdateDeviceRequest
+    ): Response<Void>
 
 }
