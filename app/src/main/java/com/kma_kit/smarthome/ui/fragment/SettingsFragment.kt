@@ -73,7 +73,7 @@ class SettingsFragment : Fragment() {
         enableDarkMode.isChecked = preferencesHelper.enableDarkMode
 
         try {
-            val inputStream = requireContext().assets.open("img_avatar.jpeg")
+            val inputStream = requireContext().assets.open("img_avatar.png")
             val bitmap = BitmapFactory.decodeStream(inputStream)
             avatar.setImageBitmap(bitmap)
 

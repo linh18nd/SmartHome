@@ -19,11 +19,10 @@ class UserInfoFragment : Fragment() {
 
     private lateinit var avatarImageView: ImageView
     private lateinit var usernameTextView: TextView
-    private lateinit var firstNameTextView: TextView
-    private lateinit var lastNameTextView: TextView
     private lateinit var emailTextView: TextView
     private lateinit var birthDateTextView: TextView
     private lateinit var genderTextView: TextView
+    private lateinit var ageTextView: TextView
     private val rootController: RootController by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,15 +33,14 @@ class UserInfoFragment : Fragment() {
 
         avatarImageView = view.findViewById(R.id.avatar)
         usernameTextView = view.findViewById(R.id.username)
-        firstNameTextView = view.findViewById(R.id.first_name)
-        lastNameTextView = view.findViewById(R.id.last_name)
         emailTextView = view.findViewById(R.id.email)
-        birthDateTextView = view.findViewById(R.id.date_of_birth)
+        birthDateTextView = view.findViewById(R.id.dob)
         genderTextView = view.findViewById(R.id.gender)
+        ageTextView = view.findViewById(R.id.age)
 
         // Set user information (for demonstration purposes, replace with actual data)
         try {
-            val inputStream = requireContext().assets.open("img_avatar.jpeg")
+            val inputStream = requireContext().assets.open("img_avatar.png")
             val bitmap = BitmapFactory.decodeStream(inputStream)
             avatarImageView.setImageBitmap(bitmap)
 
@@ -52,12 +50,11 @@ class UserInfoFragment : Fragment() {
 
         rootController.userInfo.observe(viewLifecycleOwner) {
             usernameTextView.text = it.first_name + " " + it.last_name
-            firstNameTextView.text = it.first_name
             birthDateTextView.text = it.date_of_birth
+            ageTextView.text = "18"
             if (it.gender) {
                 genderTextView.text = "Male"
             } else genderTextView.text = "Female"
-            lastNameTextView.text = it.last_name
             emailTextView.text = it.email
 
         }
