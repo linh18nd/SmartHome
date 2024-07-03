@@ -1,4 +1,4 @@
 data class UpdateDeviceRequest(
-    val isAuto: Boolean,
-    val value: Int,
+    val is_auto: Boolean,
+    val value: Double,
 )

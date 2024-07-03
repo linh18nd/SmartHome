@@ -72,11 +72,11 @@ class AllFragment : Fragment() {
     private fun onDeviceSwitchChanged(device: Device, isChecked: Boolean) {
         // Xử lý sự kiện switch click tại đây
         println("Switch clicked for device ${device.name}, isChecked: $isChecked")
-
+            println("id device ${device.id}")
         // Gọi API để cập nhật trạng thái thiết bị trên server
         lifecycleScope.launch {
             try {
-                val response = ApiClient.api.updateDeviceState(device.id, UpdateDeviceRequest(isChecked,0))
+                val response = ApiClient.api.updateDeviceState(device.id, UpdateDeviceRequest(isChecked,device.value))
                 if (response.isSuccessful) {
                     println("Device state updated successfully")
                 } else {
