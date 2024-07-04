@@ -13,9 +13,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.Constants
@@ -69,6 +71,13 @@ class SettingsFragment : Fragment() {
             enableNoti.isChecked = it.fcm_token.isNotEmpty()
 
         }
+        rootController.error.observe(viewLifecycleOwner, Observer { errorMessage ->
+            errorMessage?.let {
+                // Display error message
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        })
+
         val preferencesHelper = PreferencesHelper.getInstance()
         enableDarkMode.isChecked = preferencesHelper.enableDarkMode
 
