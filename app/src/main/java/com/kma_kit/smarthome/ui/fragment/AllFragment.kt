@@ -1,5 +1,6 @@
 package com.kma_kit.smarthome.ui.fragment
 
+import UpdateDeviceRequest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,8 +31,13 @@ class AllFragment : Fragment() {
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerViewAll)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Khởi tạo Adapter
+        // Khởi tạo Adapter với listener
         deviceAdapter = DeviceAdapter(listDevices)
+        { device, isChecked ->
+            // Xử lý sự kiện khi Switch được bật/tắt
+            println("switch $isChecked")
+            onDeviceSwitchChanged(device, isChecked)
+        }
         recyclerView.adapter = deviceAdapter
 
         // Gọi hàm fetchAndDisplayDevices để lấy dữ liệu từ API
@@ -56,6 +62,25 @@ class AllFragment : Fragment() {
                     }
                 } else {
                     println("API call failed: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun onDeviceSwitchChanged(device: Device, isChecked: Boolean) {
+        // Xử lý sự kiện switch click tại đây
+        println("Switch clicked for device ${device.name}, isChecked: $isChecked")
+            println("id device ${device.id}")
+        // Gọi API để cập nhật trạng thái thiết bị trên server
+        lifecycleScope.launch {
+            try {
+                val response = ApiClient.api.updateDeviceState(device.id, UpdateDeviceRequest(isChecked,device.value))
+                if (response.isSuccessful) {
+                    println("Device state updated successfully")
+                } else {
+                    println("Failed to update device state: ${response.code()}")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

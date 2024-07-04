@@ -10,7 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kma_kit.smarthome.R
 import com.kma_kit.smarthome.data.model.response.Device
 
-class DeviceAdapter(private val devices: List<Device>) : RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>() {
+class DeviceAdapter(
+    private val devices: List<Device>,
+    private val onSwitchClickListener: (Device, Boolean) -> Unit
+) : RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>() {
 
     inner class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val deviceName: TextView = itemView.findViewById(R.id.deviceName)
@@ -33,15 +36,16 @@ class DeviceAdapter(private val devices: List<Device>) : RecyclerView.Adapter<De
     }
 
     override fun onBindViewHolder(holder: DeviceViewHolder, position: Int) {
-        var device = devices[position]
+        val device = devices[position]
         holder.deviceName.text = device.name
-        holder.deviceType.text = device.deviceType
-        holder.deviceSwitch.isChecked = device.isAuto
+        holder.deviceType.text = device.device_type
+        holder.deviceSwitch.isChecked = device.is_auto
 
         holder.switchListener = { isChecked ->
-            // Xử lý sự kiện khi Switch thay đổi trạng thái (isChecked là trạng thái mới của Switch)
-            device.isAuto = isChecked
-            // Gọi hàm hoặc thông báo về bên ngoài (nếu cần)
+            // Cập nhật trạng thái của thiết bị
+            device.is_auto = isChecked
+            // Gọi callback để thông báo về bên ngoài
+            onSwitchClickListener(device, isChecked)
         }
     }
 
