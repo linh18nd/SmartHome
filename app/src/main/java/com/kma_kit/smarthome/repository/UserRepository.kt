@@ -6,6 +6,7 @@ import com.kma_kit.smarthome.data.model.request.UpdateUser
 import com.kma_kit.smarthome.data.model.request.UserAuth
 import com.kma_kit.smarthome.data.model.response.AuthResponse
 import com.kma_kit.smarthome.data.model.response.HomeResponse
+import com.kma_kit.smarthome.data.model.response.NotificationResponse
 import com.kma_kit.smarthome.data.model.response.UserResponse
 import retrofit2.Response
 
@@ -31,5 +32,7 @@ class UserRepository {
     suspend fun getDevice():Response<HomeResponse>{
         return  ApiClient.api.getDevices()
     }
-
+    suspend fun getNotifications(): Response<NotificationResponse> {
+        return ApiClient.api.getNotifications()
+    }
 }

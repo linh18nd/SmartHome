@@ -6,6 +6,7 @@ import com.kma_kit.smarthome.data.model.request.UpdateUser
 import com.kma_kit.smarthome.data.model.request.UserAuth
 import com.kma_kit.smarthome.data.model.response.AuthResponse
 import com.kma_kit.smarthome.data.model.response.HomeResponse
+import com.kma_kit.smarthome.data.model.response.NotificationResponse
 import com.kma_kit.smarthome.data.model.response.UserResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -13,7 +14,6 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
-import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface ApiService {
@@ -40,4 +40,6 @@ interface ApiService {
         @Body request: UpdateDeviceRequest
     ): Response<Void>
 
+     @GET("notifications/list/?ordering=0&page=1&page_size=100")
+     suspend fun getNotifications(): Response<NotificationResponse>
 }
