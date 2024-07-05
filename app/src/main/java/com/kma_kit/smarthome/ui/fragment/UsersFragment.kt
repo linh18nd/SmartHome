@@ -4,6 +4,7 @@ package com.kma_kit.smarthome.ui.fragment
 import RootController
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,6 +61,15 @@ class UsersFragment : Fragment() {
             emailTextView.text = it.email
 
         }
+        rootController.devices.observe(viewLifecycleOwner, Observer { devices ->
+            Log.d("UserFragment", "LiveData updated: $devices")
+            devices.forEach { deviceEntity ->
+                if (deviceEntity.type == "humidity") {
+                    Log.d("humidity", deviceEntity.toString())
+                }
+            }
+        })
+
 
         rootController.error.observe(viewLifecycleOwner, Observer { errorMessage ->
             errorMessage?.let {

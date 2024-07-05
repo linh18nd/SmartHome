@@ -1,11 +1,16 @@
 package com.kma_kit.smarthome.ui.fragment
 
+import RootController
 import UpdateDeviceRequest
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +26,7 @@ class AllFragment : Fragment() {
 
     private lateinit var deviceAdapter: DeviceAdapter
     private val listDevices = mutableListOf<Device>()
+    private val rootController: RootController by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +45,14 @@ class AllFragment : Fragment() {
             onDeviceSwitchChanged(device, isChecked)
         }
         recyclerView.adapter = deviceAdapter
+        rootController.devices.observe(viewLifecycleOwner, Observer { devices ->
+            Log.d("AllFragment", "LiveData updated: $devices")
+            devices.forEach { deviceEntity ->
+                if (deviceEntity.type == "humidity") {
+                    Log.d("humidity", deviceEntity.toString())
+                }
+            }
+        })
 
         // Gọi hàm fetchAndDisplayDevices để lấy dữ liệu từ API
         fetchAndDisplayDevices()
@@ -72,11 +86,14 @@ class AllFragment : Fragment() {
     private fun onDeviceSwitchChanged(device: Device, isChecked: Boolean) {
         // Xử lý sự kiện switch click tại đây
         println("Switch clicked for device ${device.name}, isChecked: $isChecked")
-            println("id device ${device.id}")
+        println("id device ${device.id}")
         // Gọi API để cập nhật trạng thái thiết bị trên server
         lifecycleScope.launch {
             try {
-                val response = ApiClient.api.updateDeviceState(device.id, UpdateDeviceRequest(isChecked,device.value))
+                val response = ApiClient.api.updateDeviceState(
+                    device.id,
+                    UpdateDeviceRequest(isChecked, device.value)
+                )
                 if (response.isSuccessful) {
                     println("Device state updated successfully")
                 } else {

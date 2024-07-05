@@ -1,5 +1,6 @@
 package com.kma_kit.smarthome.services.fcm
 
+import RootController
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -9,18 +10,25 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.fragment.app.activityViewModels
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.kma_kit.smarthome.R
 import com.kma_kit.smarthome.ui.SmartHomeApplication
 import com.kma_kit.smarthome.ui.activity.MainActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONArray
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
+        Log.d(TAG, "Dât noti")
         remoteMessage.data.isNotEmpty().let {
             Log.d(TAG, "Message data payload: " + remoteMessage.data)
+            handleDataPayload(remoteMessage.data)
         }
 
         remoteMessage.notification?.let {
@@ -46,24 +54,29 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(
             SmartHomeApplication.getAppContext(), 0 /* Request code */, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.FLAG_IMMUTABLE
+        )
 
         val channelId = getString(R.string.default_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val notificationBuilder = NotificationCompat.Builder(SmartHomeApplication.getAppContext(), channelId)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(title)
-            .setContentText(body)
-            .setAutoCancel(true)
-            .setSound(defaultSoundUri)
-            .setContentIntent(pendingIntent)
+        val notificationBuilder =
+            NotificationCompat.Builder(SmartHomeApplication.getAppContext(), channelId)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent)
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId,
+            val channel = NotificationChannel(
+                channelId,
                 getString(R.string.default_notification_channel_name),
-                NotificationManager.IMPORTANCE_DEFAULT)
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
             notificationManager.createNotificationChannel(channel)
         }
 
@@ -72,5 +85,16 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     companion object {
         private const val TAG = "MyFirebaseMsgService"
+    }
+
+    private fun handleDataPayload(data: Map<String, String>) {
+        val jsonString = data["data"]
+        jsonString?.let {
+            CoroutineScope(Dispatchers.Main).launch {
+                val rootController: RootController by activityViewModels()
+                rootController.updateDevices(it)
+            }
+        }
+
     }
 }
