@@ -61,7 +61,4 @@ class UserInfoFragment : Fragment() {
         return view
     }
 
-    private fun getDataMe() {
-
-    }
 }
