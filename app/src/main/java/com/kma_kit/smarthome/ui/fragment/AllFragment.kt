@@ -1,23 +1,27 @@
 package com.kma_kit.smarthome.ui.fragment
 
+import ApiClient
 import RootController
 import UpdateDeviceRequest
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kma_kit.smarthome.R
 import com.kma_kit.smarthome.data.model.response.Device
 import com.kma_kit.smarthome.data.model.response.HomeResponse
-import com.kma_kit.smarthome.services.api.ApiService
 import com.kma_kit.smarthome.ui.adapter.DeviceAdapter
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -54,7 +58,7 @@ class AllFragment : Fragment() {
             }
         })
 
-        // Gọi hàm fetchAndDisplayDevices để lấy dữ liệu từ API
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, IntentFilter("MyDataUpdate"))
         fetchAndDisplayDevices()
 
         return view
@@ -101,6 +105,15 @@ class AllFragment : Fragment() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+            }
+        }
+    }
+
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.getStringExtra("message")?.let { message ->
+                Log.d("AllFragment", "Broadcast received: $message")
+                rootController.updateDevices(message)
             }
         }
     }

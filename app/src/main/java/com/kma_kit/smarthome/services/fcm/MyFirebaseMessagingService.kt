@@ -1,6 +1,5 @@
 package com.kma_kit.smarthome.services.fcm
 
-import RootController
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -10,16 +9,12 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.fragment.app.activityViewModels
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.kma_kit.smarthome.R
 import com.kma_kit.smarthome.ui.SmartHomeApplication
 import com.kma_kit.smarthome.ui.activity.MainActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.json.JSONArray
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -90,11 +85,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     private fun handleDataPayload(data: Map<String, String>) {
         val jsonString = data["data"]
         jsonString?.let {
-            CoroutineScope(Dispatchers.Main).launch {
-                val rootController: RootController by activityViewModels()
-                rootController.updateDevices(it)
-            }
+            sendMessageToViewModel(it)
         }
+    }
 
+    private fun sendMessageToViewModel(message: String) {
+        val intent = Intent("MyDataUpdate")
+        intent.putExtra("message", message)
+        LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
     }
 }
