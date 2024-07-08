@@ -80,7 +80,4 @@ class UsersFragment : Fragment() {
         return view
     }
 
-    private fun getDataMe() {
-
-    }
 }

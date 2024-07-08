@@ -23,14 +23,36 @@ import java.util.Locale
 class HomeFragment : Fragment() {
     private lateinit var notificationIcon: ImageView
     private val rootController: RootController by activityViewModels()
+    private lateinit var temperatureTextView: TextView
+    private lateinit var gasTextView: TextView
+    private lateinit var humidityTextView: TextView
+    private lateinit var lightTextView: TextView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+        temperatureTextView = view.findViewById(R.id.temperatureTextView)
+        gasTextView = view.findViewById(R.id.gasTextView)
+        humidityTextView = view.findViewById(R.id.humidityTextView)
+        lightTextView = view.findViewById(R.id.lightTextView)
         val dateTextView: TextView = view.findViewById(R.id.dateTextView)
         val currentDate = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date())
         dateTextView.text = currentDate
+
+        rootController.devices.observe(viewLifecycleOwner, Observer { devices ->
+            Log.d("HomeFragment", "LiveData updated: $devices")
+            devices.forEach { deviceEntity ->
+                when (deviceEntity.type) {
+                    "humidity" -> humidityTextView.text = deviceEntity.value.toString() + "%"
+                    "temperature" -> temperatureTextView.text = deviceEntity.value.toString() + "°C"
+                    "gas" -> gasTextView.text = deviceEntity.value.toString()+ "%"
+                    "bulb" -> lightTextView.text = deviceEntity.value.toString()
+                }
+            }
+        })
+
         val tabLayout: TabLayout = view.findViewById(R.id.tabLayout)
         notificationIcon = view.findViewById(R.id.notificationIcon)
 
@@ -42,15 +64,6 @@ class HomeFragment : Fragment() {
                 replace(R.id.fragmentContainer, AllFragment())
             }
         }
-        rootController.devices.observe(viewLifecycleOwner, Observer { devices ->
-            Log.d("AllFragment", "LiveData updated: $devices")
-            devices.forEach { deviceEntity ->
-                if (deviceEntity.type == "humidity") {
-                    Log.d("humidity", deviceEntity.toString())
-                }
-            }
-        })
-
 
         // Set up tab selected listener
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -59,7 +72,7 @@ class HomeFragment : Fragment() {
                     0 -> AllFragment()
                     1 -> LivingRoomFragment()
                     2 -> KitchenFragment()
-                    3 -> BathroomFragment()
+                    3 -> BedroomFragment()
                     else -> AllFragment()
                 }
                 childFragmentManager.commit {

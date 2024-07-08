@@ -20,6 +20,7 @@ class DeviceAdapter(
         val deviceType: TextView = itemView.findViewById(R.id.deviceType)
         @SuppressLint("UseSwitchCompatOrMaterialCode")
         val deviceSwitch: Switch = itemView.findViewById(R.id.deviceSwitch)
+        val backgroundView: View = itemView.findViewById(R.id.backgroundView)
 
         var switchListener: ((Boolean) -> Unit)? = null
 
@@ -40,6 +41,13 @@ class DeviceAdapter(
         holder.deviceName.text = device.name
         holder.deviceType.text = device.device_type
         holder.deviceSwitch.isChecked = device.is_auto
+
+        // Thay đổi màu nền dựa trên giá trị của device.value
+        if (device.value == 1.0) {
+            holder.backgroundView.setBackgroundColor(holder.itemView.context.getColor(R.color.black))
+        } else {
+            holder.backgroundView.setBackgroundColor(holder.itemView.context.getColor(R.color.cardBackgroundColor))
+        }
 
         holder.switchListener = { isChecked ->
             // Cập nhật trạng thái của thiết bị

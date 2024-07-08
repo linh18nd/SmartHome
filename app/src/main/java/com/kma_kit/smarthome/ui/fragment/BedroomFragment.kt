@@ -24,7 +24,7 @@ import com.kma_kit.smarthome.ui.adapter.DeviceAdapter
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class KitchenFragment : Fragment() {
+class BedroomFragment : Fragment() {
     private lateinit var deviceAdapter: DeviceAdapter
     private val listDevices = mutableListOf<Device>()
     private val rootController: RootController by activityViewModels()
@@ -33,14 +33,13 @@ class KitchenFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_kitchen, container, false)
-
-        // Khởi tạo RecyclerView
-        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerViewKitchen)
+        val view = inflater.inflate(R.layout.fragment_bedroom, container, false)
+        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerViewBedroom)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Khởi tạo Adapter với listener
-        deviceAdapter = DeviceAdapter(listDevices) { device, isChecked ->
+        deviceAdapter = DeviceAdapter(listDevices)
+        { device, isChecked ->
             // Xử lý sự kiện khi Switch được bật/tắt
             println("switch $isChecked")
             onDeviceSwitchChanged(device, isChecked)
@@ -72,7 +71,7 @@ class KitchenFragment : Fragment() {
                     homeResponse?.let { home ->
                         listDevices.clear() // Xóa dữ liệu cũ trước khi thêm dữ liệu mới
                         home.rooms.forEach { room ->
-                            if(room.id == "4c564906-d6b3-4847-9825-a73ba8135c56"){ // Sửa lại ID cho phù hợp với phòng bếp
+                            if(room.id == "1d653e28-d7bf-476f-9a35-c51a1c844b73"){
                                 listDevices.addAll(room.devices)
                             }
                         }
@@ -112,7 +111,7 @@ class KitchenFragment : Fragment() {
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.getStringExtra("message")?.let { message ->
-                Log.d("KitchenFragment", "Broadcast received: $message")
+                Log.d("AllFragment", "Broadcast received: $message")
                 if (isAdded) {
                     rootController.updateDevices(message)
                 }
