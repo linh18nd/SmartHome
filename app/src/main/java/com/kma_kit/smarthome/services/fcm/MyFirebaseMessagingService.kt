@@ -20,7 +20,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-        Log.d(TAG, "Dât noti")
+
         remoteMessage.data.isNotEmpty().let {
             Log.d(TAG, "Message data payload: " + remoteMessage.data)
             handleDataPayload(remoteMessage.data)
@@ -28,7 +28,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         remoteMessage.notification?.let {
             Log.d(TAG, "Message Notification Body: ${it.body}")
-            showNotification(it.title ?: "FCM Message", it.body ?: "")
+            if (it.body != null && it.body != "update") {
+                showNotification(it.title ?: "FCM Message", it.body ?: "")
+            }
         }
     }
 
