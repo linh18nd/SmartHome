@@ -46,8 +46,24 @@ class HomeFragment : Fragment() {
             devices.forEach { deviceEntity ->
                 when (deviceEntity.type) {
                     "humidity" -> humidityTextView.text = deviceEntity.value.toString() + "%"
-                    "temperature" -> temperatureTextView.text = deviceEntity.value.toString() + "°C"
-                    "gas" -> gasTextView.text = deviceEntity.value.toString()+ "%"
+                    "temperature" -> {
+                        temperatureTextView.text = deviceEntity.value.toString() + "°C"
+                        if (deviceEntity.value > 50) {
+                            temperatureTextView.setTextColor(resources.getColor(R.color.red))
+                        } else {
+                            temperatureTextView.setTextColor(resources.getColor(R.color.textColor))
+                        }
+                    }
+
+                    "gas" -> {
+                        gasTextView.text = deviceEntity.value.toString() + "%"
+                        if (deviceEntity.value > 30) {
+                            gasTextView.setTextColor(resources.getColor(R.color.red))
+                        } else {
+                            gasTextView.setTextColor(resources.getColor(R.color.textColor))
+                        }
+                    }
+
                     "bulb" -> lightTextView.text = deviceEntity.value.toString()
                 }
             }
@@ -92,7 +108,7 @@ class HomeFragment : Fragment() {
         return view
     }
 
-    fun listenEvent () {
+    fun listenEvent() {
         notificationIcon.setOnClickListener {
             var intent = Intent(context, NotificationsActivity::class.java)
             startActivity(intent)
