@@ -24,6 +24,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+const val GAS_MIN_VALUE = 40
+const val TEMP_MIN_VALUE = 35
+
 class HomeFragment : Fragment() {
     private lateinit var notificationIcon: ImageView
     private val rootController: RootController by activityViewModels()
@@ -51,8 +54,23 @@ class HomeFragment : Fragment() {
             devices.forEach { deviceEntity ->
                 when (deviceEntity.type) {
                     "humidity" -> humidityTextView.text = deviceEntity.value.toString() + "%"
-                    "temperature" -> temperatureTextView.text = deviceEntity.value.toString() + "°C"
-                    "gas" -> gasTextView.text = deviceEntity.value.toString() + "%"
+                    "temperature" -> {
+                        temperatureTextView.text = deviceEntity.value.toString() + "°C"
+                        if (deviceEntity.value > TEMP_MIN_VALUE) {
+                            temperatureTextView.setTextColor(resources.getColor(R.color.red))
+                        } else {
+                            temperatureTextView.setTextColor(resources.getColor(R.color.textColor))
+                        }
+                    }
+
+                    "gas" -> {
+                        gasTextView.text = deviceEntity.value.toString() + "%"
+                        if (deviceEntity.value > GAS_MIN_VALUE) {
+                            gasTextView.setTextColor(resources.getColor(R.color.red))
+                        } else {
+                            gasTextView.setTextColor(resources.getColor(R.color.textColor))
+                        }
+                    }
                     "bulb" -> {
                         if (deviceEntity.value == 1) {
                             totalLightsOn++
