@@ -4,18 +4,21 @@ package com.kma_kit.smarthome.ui.fragment
 import RootController
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.kma_kit.smarthome.R
 import java.io.IOException
 
 
-class UserInfoFragment : Fragment() {
+class UsersFragment : Fragment() {
 
     private lateinit var avatarImageView: ImageView
     private lateinit var usernameTextView: TextView
@@ -58,6 +61,22 @@ class UserInfoFragment : Fragment() {
             emailTextView.text = it.email
 
         }
+        rootController.devices.observe(viewLifecycleOwner, Observer { devices ->
+            Log.d("UserFragment", "LiveData updated: $devices")
+            devices.forEach { deviceEntity ->
+                if (deviceEntity.type == "humidity") {
+                    Log.d("humidity", deviceEntity.toString())
+                }
+            }
+        })
+
+
+        rootController.error.observe(viewLifecycleOwner, Observer { errorMessage ->
+            errorMessage?.let {
+                // Display error message
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        })
         return view
     }
 

@@ -1,6 +1,5 @@
 package com.kma_kit.smarthome.ui.fragment
 
-import ApiClient
 import RootController
 import UpdateDeviceRequest
 import android.content.BroadcastReceiver
@@ -14,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,8 +24,7 @@ import com.kma_kit.smarthome.ui.adapter.DeviceAdapter
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class AllFragment : Fragment() {
-
+class BedroomFragment : Fragment() {
     private lateinit var deviceAdapter: DeviceAdapter
     private val listDevices = mutableListOf<Device>()
     private val rootController: RootController by activityViewModels()
@@ -36,9 +33,8 @@ class AllFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_all, container, false)
-
-        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerViewAll)
+        val view = inflater.inflate(R.layout.fragment_bedroom, container, false)
+        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerViewBedroom)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Khởi tạo Adapter với listener
@@ -49,19 +45,20 @@ class AllFragment : Fragment() {
             onDeviceSwitchChanged(device, isChecked)
         }
         recyclerView.adapter = deviceAdapter
-        rootController.devices.observe(viewLifecycleOwner, Observer { devices ->
-            Log.d("AllFragment", "LiveData updated: $devices")
-            devices.forEach { deviceEntity ->
-                if (deviceEntity.type == "humidity") {
-                    Log.d("humidity", deviceEntity.toString())
-                }
-            }
-        })
 
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, IntentFilter("MyDataUpdate"))
-        fetchAndDisplayDevices()
+        if (isAdded) {
+            LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, IntentFilter("MyDataUpdate"))
+            fetchAndDisplayDevices()
+        }
 
         return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (isAdded) {
+            LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(broadcastReceiver)
+        }
     }
 
     private fun fetchAndDisplayDevices() {
@@ -74,7 +71,9 @@ class AllFragment : Fragment() {
                     homeResponse?.let { home ->
                         listDevices.clear() // Xóa dữ liệu cũ trước khi thêm dữ liệu mới
                         home.rooms.forEach { room ->
-                            listDevices.addAll(room.devices)
+                            if(room.id == "1d653e28-d7bf-476f-9a35-c51a1c844b73"){
+                                listDevices.addAll(room.devices)
+                            }
                         }
                         deviceAdapter.notifyDataSetChanged() // Cập nhật RecyclerView khi có dữ liệu mới
                     }
@@ -113,7 +112,9 @@ class AllFragment : Fragment() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.getStringExtra("message")?.let { message ->
                 Log.d("AllFragment", "Broadcast received: $message")
-                rootController.updateDevices(message)
+                if (isAdded) {
+                    rootController.updateDevices(message)
+                }
             }
         }
     }

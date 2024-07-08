@@ -20,4 +20,5 @@ public class SmartHomeApplication extends Application {
         super.onCreate();
         instance = this;
     }
+
 }
