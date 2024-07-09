@@ -27,7 +27,7 @@ class HomeFragment : Fragment() {
     private lateinit var gasTextView: TextView
     private lateinit var humidityTextView: TextView
     private lateinit var lightTextView: TextView
-
+    private var numberOfLightsWithValue1: Int = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,7 +48,14 @@ class HomeFragment : Fragment() {
                     "humidity" -> humidityTextView.text = deviceEntity.value.toString() + "%"
                     "temperature" -> temperatureTextView.text = deviceEntity.value.toString() + "°C"
                     "gas" -> gasTextView.text = deviceEntity.value.toString()+ "%"
-                    "bulb" -> lightTextView.text = deviceEntity.value.toString()
+                    "bulb" -> {
+                        lightTextView.text = deviceEntity.value.toString()
+                        // Kiểm tra và cập nhật số lượng đèn có value = 1
+                        if (deviceEntity.value == 1) {
+                            numberOfLightsWithValue1++
+                            updateNumberOfLightsTextView()
+                        }
+                    }
                 }
             }
         })
@@ -97,5 +104,9 @@ class HomeFragment : Fragment() {
             var intent = Intent(context, NotificationsActivity::class.java)
             startActivity(intent)
         }
+    }
+    private fun updateNumberOfLightsTextView() {
+        // Cập nhật số lượng đèn có value = 1 vào TextView
+        lightTextView.text = numberOfLightsWithValue1.toString()
     }
 }

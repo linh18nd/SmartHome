@@ -42,13 +42,9 @@ class AllFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Khởi tạo Adapter với listener
-        deviceAdapter = DeviceAdapter(listDevices)
-        { device, isChecked ->
-            // Xử lý sự kiện khi Switch được bật/tắt
-            println("switch $isChecked")
-            onDeviceSwitchChanged(device, isChecked)
-        }
+        deviceAdapter = DeviceAdapter(listDevices, ::onIsAutoSwitchChanged, ::onValueSwitchChanged)
         recyclerView.adapter = deviceAdapter
+
         rootController.devices.observe(viewLifecycleOwner, Observer { devices ->
             Log.d("AllFragment", "LiveData updated: $devices")
             devices.forEach { deviceEntity ->
@@ -87,21 +83,41 @@ class AllFragment : Fragment() {
         }
     }
 
-    private fun onDeviceSwitchChanged(device: Device, isChecked: Boolean) {
-        // Xử lý sự kiện switch click tại đây
-        println("Switch clicked for device ${device.name}, isChecked: $isChecked")
-        println("id device ${device.id}")
-        // Gọi API để cập nhật trạng thái thiết bị trên server
+    private fun onIsAutoSwitchChanged(device: Device, isChecked: Boolean) {
+        // Xử lý sự kiện khi Switch isAuto được bật/tắt
+        println("isAuto switch clicked for device ${device.name}, isChecked: $isChecked")
         lifecycleScope.launch {
             try {
                 val response = ApiClient.api.updateDeviceState(
                     device.id,
-                    UpdateDeviceRequest(isChecked,device.value)
+                    UpdateDeviceRequest(isChecked, device.value)
                 )
                 if (response.isSuccessful) {
-                    println("Device state updated successfully")
+                    println("Device isAuto state updated successfully")
                 } else {
-                    println("Failed to update device state: ${response.code()}")
+                    println("Failed to update device isAuto state: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun onValueSwitchChanged(device: Device, isChecked: Boolean) {
+        // Xử lý sự kiện khi Switch value được bật/tắt
+        println("value switch clicked for device ${device.name}, isChecked: $isChecked")
+        // Thay đổi giá trị value từ 0 sang 1 và ngược lại
+        val newValue = if (isChecked) 1 else 0
+        lifecycleScope.launch {
+            try {
+                val response = ApiClient.api.updateDeviceState(
+                    device.id,
+                    UpdateDeviceRequest(device.is_auto, newValue.toDouble())
+                )
+                if (response.isSuccessful) {
+                    println("Device value state updated successfully")
+                } else {
+                    println("Failed to update device value state: ${response.code()}")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

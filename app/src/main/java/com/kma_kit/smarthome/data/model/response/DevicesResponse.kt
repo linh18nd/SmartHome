@@ -5,5 +5,5 @@ data class Device(
     val name: String,
     var is_auto: Boolean,
     val device_type: String,
-    val value: Double
+    var value: Double
 )
