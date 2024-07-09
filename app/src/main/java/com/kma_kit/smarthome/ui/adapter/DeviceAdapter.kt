@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +22,7 @@ class DeviceAdapter(
         @SuppressLint("UseSwitchCompatOrMaterialCode")
         val deviceSwitch: Switch = itemView.findViewById(R.id.deviceSwitch1)
 //        val backgroundView: View = itemView.findViewById(R.id.backgroundView)
-
+        val  deviceImage : ImageView = itemView.findViewById(R.id.imageIcon)
         var switchListener: ((Boolean) -> Unit)? = null
 
         init {
@@ -41,7 +42,13 @@ class DeviceAdapter(
         holder.deviceName.text = device.name
         holder.deviceType.text = device.device_type
         holder.deviceSwitch.isChecked = device.is_auto
-
+        when (device.device_type) {
+            "bulb" -> holder.deviceImage.setImageResource(R.drawable.light)
+            "water" -> holder.deviceImage.setImageResource(R.drawable.humidity)
+            "fan" -> holder.deviceImage.setImageResource(R.drawable.ic_fan)
+            "humidity" -> holder.deviceImage.setImageResource(R.drawable.humidity)
+            else -> holder.deviceImage.setImageResource(R.drawable.temprature)
+        }
         // Thay đổi màu nền dựa trên giá trị của device.value
         if (device.value == 1.0) {
 //            holder.backgroundView.setBackgroundColor(holder.itemView.context.getColor(R.color.black))
