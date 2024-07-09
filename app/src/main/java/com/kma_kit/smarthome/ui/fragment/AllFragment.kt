@@ -54,7 +54,8 @@ class AllFragment : Fragment() {
             }
         })
 
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(broadcastReceiver, IntentFilter("MyDataUpdate"))
+        LocalBroadcastManager.getInstance(requireContext())
+            .registerReceiver(broadcastReceiver, IntentFilter("MyDataUpdate"))
         fetchAndDisplayDevices()
 
         return view
