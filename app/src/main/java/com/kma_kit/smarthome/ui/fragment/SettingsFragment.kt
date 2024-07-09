@@ -148,7 +148,7 @@ class SettingsFragment : Fragment() {
                         user.last_name,
                         user.date_of_birth,
                         user.gender,
-                        "String"
+                        ""
                     )
                 }
 
