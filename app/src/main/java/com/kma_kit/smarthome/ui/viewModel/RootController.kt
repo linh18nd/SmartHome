@@ -4,12 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import com.kma_kit.smarthome.data.entity.DeviceEntity
-import com.kma_kit.smarthome.data.entity.parseJson
 import com.kma_kit.smarthome.data.model.request.UpdateUser
-import com.kma_kit.smarthome.data.model.response.Device
 import com.kma_kit.smarthome.data.model.response.HomeResponse
 import com.kma_kit.smarthome.data.model.response.UserResponse
 import com.kma_kit.smarthome.repository.UserRepository
@@ -21,8 +18,10 @@ class RootController : ViewModel() {
     val userInfo: LiveData<UserResponse> get() = _userInfo
 
     private val _devices = MutableLiveData<List<DeviceEntity>>()
-
     val devices: LiveData<List<DeviceEntity>> get() = _devices
+
+    private val _numberOfLightsOn = MutableLiveData<Int>()
+    val numberOfLightsOn: LiveData<Int> get() = _numberOfLightsOn
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
@@ -71,16 +70,22 @@ class RootController : ViewModel() {
         try {
             val devices = parseData(data)
             _devices.postValue(devices)
+
+            // Calculate number of lights with value 1
+            var totalLightsOn = 0
             devices.forEach { device ->
-                if (device.type == "humidity") {
-                    Log.d("RootController", "Device updated: $device")
+                if (device.type == "bulb" && device.value == 1) {
+                    totalLightsOn++
                 }
             }
+            _numberOfLightsOn.postValue(totalLightsOn)
+
             Log.d("RootController", "Devices updated successfully")
         } catch (e: Exception) {
             Log.e("RootController", "Failed to update devices", e)
         }
     }
+
     private fun parseData(data: String): List<DeviceEntity> {
         Log.d("RootController", "Parsing data: $data")
         val gson = Gson()

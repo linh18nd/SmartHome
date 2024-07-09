@@ -13,9 +13,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
 import com.kma_kit.smarthome.R
+import com.kma_kit.smarthome.data.model.response.HomeResponse
 import com.kma_kit.smarthome.ui.activity.NotificationsActivity
+import kotlinx.coroutines.launch
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -40,23 +44,24 @@ class HomeFragment : Fragment() {
         val dateTextView: TextView = view.findViewById(R.id.dateTextView)
         val currentDate = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date())
         dateTextView.text = currentDate
-
+    initData()
         rootController.devices.observe(viewLifecycleOwner, Observer { devices ->
             Log.d("HomeFragment", "LiveData updated: $devices")
+            var totalLightsOn = 0
             devices.forEach { deviceEntity ->
                 when (deviceEntity.type) {
                     "humidity" -> humidityTextView.text = deviceEntity.value.toString() + "%"
                     "temperature" -> temperatureTextView.text = deviceEntity.value.toString() + "°C"
-                    "gas" -> gasTextView.text = deviceEntity.value.toString()+ "%"
+                    "gas" -> gasTextView.text = deviceEntity.value.toString() + "%"
                     "bulb" -> {
-                        lightTextView.text = deviceEntity.value.toString()
                         if (deviceEntity.value == 1) {
-                            numberOfLightsWithValue1++
-                            updateNumberOfLightsTextView()
+                            totalLightsOn++
                         }
+                        // Update other UI elements related to bulb if needed
                     }
                 }
             }
+            lightTextView.text = totalLightsOn.toString()
         })
 
         val tabLayout: TabLayout = view.findViewById(R.id.tabLayout)
@@ -97,6 +102,51 @@ class HomeFragment : Fragment() {
 
         return view
     }
+    private fun initData() {
+        lifecycleScope.launch {
+            try {
+                val response: Response<HomeResponse> = ApiClient.api.getDevices()
+
+                if (response.isSuccessful) {
+                    val homeResponse = response.body()
+                    homeResponse?.let { home ->
+                        var totalLightsOn = 0
+
+                        home.rooms.forEach { room ->
+                            val filteredDevices = room.devices.filter { device ->
+                                when (device.device_type) {
+                                    "temperature" -> {
+                                        temperatureTextView.text = "${device.value.toInt()}°C"
+                                        false
+                                    }
+                                    "humidity" -> {
+                                        humidityTextView.text = "${device.value.toInt()}%"
+                                        false
+                                    }
+                                    "gas" -> {
+                                        gasTextView.text = "${device.value.toInt()}%"
+                                        false
+                                    }
+                                    "bulb" -> {
+                                        if (device.value == 1.0) {
+                                            totalLightsOn++
+                                        }
+                                        true
+                                    }
+                                    else -> true
+                                }
+                            }
+                        }
+                        lightTextView.text = " $totalLightsOn"
+                    }
+                } else {
+                    println("API call failed: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 
     fun listenEvent () {
         notificationIcon.setOnClickListener {
@@ -104,7 +154,7 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
     }
-    private fun updateNumberOfLightsTextView() {
+    private fun updateNumberOfLightsTextView(number: String) {
         // Cập nhật số lượng đèn có value = 1 vào TextView
         lightTextView.text = numberOfLightsWithValue1.toString()
     }
