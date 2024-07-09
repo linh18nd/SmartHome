@@ -94,9 +94,22 @@ class AllFragment : Fragment() {
         // Gọi API để cập nhật trạng thái thiết bị trên server
         lifecycleScope.launch {
             try {
+                var value: Double;
+                if(device.device_type == "bulb"|| device.device_type == "water" || device.device_type == "fan"){
+                    if(device.value.toInt() ==0){
+                        value = 1.0
+                    }else{
+                        value = 0.0
+                    }
+                }
+                else{
+                    println("check send noti")
+                    value = device.value
+                }
+                println("$value")
                 val response = ApiClient.api.updateDeviceState(
                     device.id,
-                    UpdateDeviceRequest(isChecked, device.value)
+                    UpdateDeviceRequest(isChecked, value)
                 )
                 if (response.isSuccessful) {
                     println("Device state updated successfully")
