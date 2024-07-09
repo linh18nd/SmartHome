@@ -96,7 +96,7 @@ class AllFragment : Fragment() {
             try {
                 val response = ApiClient.api.updateDeviceState(
                     device.id,
-                    UpdateDeviceRequest(isChecked, device.value)
+                    UpdateDeviceRequest(isChecked,device.value)
                 )
                 if (response.isSuccessful) {
                     println("Device state updated successfully")
