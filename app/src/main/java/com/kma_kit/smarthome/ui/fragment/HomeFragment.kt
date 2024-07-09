@@ -50,7 +50,6 @@ class HomeFragment : Fragment() {
                     "gas" -> gasTextView.text = deviceEntity.value.toString()+ "%"
                     "bulb" -> {
                         lightTextView.text = deviceEntity.value.toString()
-                        // Kiểm tra và cập nhật số lượng đèn có value = 1
                         if (deviceEntity.value == 1) {
                             numberOfLightsWithValue1++
                             updateNumberOfLightsTextView()

@@ -91,7 +91,12 @@ class KitchenFragment : Fragment() {
                         listDevices.clear() // Xóa dữ liệu cũ trước khi thêm dữ liệu mới
                         home.rooms.forEach { room ->
                             if (room.id == "4c564906-d6b3-4847-9825-a73ba8135c56") { // Sửa lại ID cho phù hợp với phòng bếp
-                                listDevices.addAll(room.devices)
+                                val filteredDevices = room.devices.filter { device ->
+                                    device.device_type != "temperature" &&
+                                            device.device_type != "humidity" &&
+                                            device.device_type != "gas"
+                                }
+                                listDevices.addAll(filteredDevices)
                             }
                         }
                         deviceAdapter.notifyDataSetChanged() // Cập nhật RecyclerView khi có dữ liệu mới

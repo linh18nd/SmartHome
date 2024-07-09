@@ -71,7 +71,12 @@ class AllFragment : Fragment() {
                     homeResponse?.let { home ->
                         listDevices.clear() // Xóa dữ liệu cũ trước khi thêm dữ liệu mới
                         home.rooms.forEach { room ->
-                            listDevices.addAll(room.devices)
+                            val filteredDevices = room.devices.filter { device ->
+                                device.device_type != "temperature" &&
+                                        device.device_type != "humidity" &&
+                                        device.device_type != "gas"
+                            }
+                            listDevices.addAll(filteredDevices)
                         }
                         deviceAdapter.notifyDataSetChanged() // Cập nhật RecyclerView khi có dữ liệu mới
                     }

@@ -90,7 +90,12 @@ class BedroomFragment : Fragment() {
                         listDevices.clear() // Xóa dữ liệu cũ trước khi thêm dữ liệu mới
                         home.rooms.forEach { room ->
                             if (room.id == "1d653e28-d7bf-476f-9a35-c51a1c844b73") {
-                                listDevices.addAll(room.devices)
+                                val filteredDevices = room.devices.filter { device ->
+                                    device.device_type != "temperature" &&
+                                            device.device_type != "humidity" &&
+                                            device.device_type != "gas"
+                                }
+                                listDevices.addAll(filteredDevices)
                             }
                         }
                         deviceAdapter.notifyDataSetChanged() // Cập nhật RecyclerView khi có dữ liệu mới
