@@ -1,6 +1,6 @@
 package com.kma_kit.smarthome.ui.activity
 
-import android.content.Context
+import PreferencesHelper
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -54,6 +54,7 @@ class LoginActivity : AppCompatActivity() {
             if (authResponse != null) {
                 Log.d("LoginActivity", "Login successful")
                 val intent = Intent(this, HomeScreenActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 val preferencesHelper = PreferencesHelper.getInstance()
                 preferencesHelper.authToken = authResponse.access
 

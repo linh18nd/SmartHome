@@ -1,11 +1,9 @@
 package com.kma_kit.smarthome.ui.activity
 
+import PreferencesHelper
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.FirebaseApp
 import com.kma_kit.smarthome.R
 
@@ -25,10 +23,12 @@ class MainActivity : AppCompatActivity() {
         val preferencesHelper = PreferencesHelper.getInstance()
         if (preferencesHelper.authToken != null) {
             val intent = Intent(this, HomeScreenActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
         else {
             val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
     }

@@ -1,5 +1,6 @@
 package com.kma_kit.smarthome.ui.fragment
 
+import PreferencesHelper
 import RootController
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -9,7 +10,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
@@ -24,12 +24,12 @@ import com.google.firebase.messaging.Constants
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kma_kit.smarthome.R
 import com.kma_kit.smarthome.data.model.request.UpdateUser
-import com.kma_kit.smarthome.data.model.response.UserResponse
-import com.kma_kit.smarthome.repository.UserRepository
 import com.kma_kit.smarthome.ui.activity.ChangePasswordActivity
-import com.kma_kit.smarthome.ui.activity.HomeScreenActivity
 import com.kma_kit.smarthome.ui.activity.LoginActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okio.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -140,12 +140,42 @@ class SettingsFragment : Fragment() {
         }
 
         logoutButton.setOnClickListener {
-            val context = requireContext()
-            val preferencesHelper = PreferencesHelper.getInstance()
-            preferencesHelper.clear()
-            val intent = Intent(context, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
+            lifecycleScope.launch {
+                val user = rootController.userInfo.value
+                val updatedUser = user?.let {
+                    UpdateUser(
+                        it.first_name,
+                        user.last_name,
+                        user.date_of_birth,
+                        user.gender,
+                        "String"
+                    )
+                }
+
+                if (updatedUser != null) {
+                    withContext(Dispatchers.IO) {
+                        rootController.updateUserInfo(updatedUser)
+                    }
+                }
+                Log.d("SettingsFragment", "Logout")
+                delay(1500)
+                Log.d("SettingsFragment", "Logout2")
+                val context = requireContext()
+                val preferencesHelper = PreferencesHelper.getInstance()
+                preferencesHelper.clear()
+                val intent = Intent(context, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+
+
+
+            }
+
+
+
+
+
+
         }
     }
 
