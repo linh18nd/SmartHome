@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.airbnb.lottie.utils.Logger
 import com.kma_kit.smarthome.R
 import com.kma_kit.smarthome.data.model.response.Device
 
@@ -24,19 +23,10 @@ class DeviceAdapter(
         val deviceType: TextView = itemView.findViewById(R.id.deviceType)
 
         @SuppressLint("UseSwitchCompatOrMaterialCode")
-        val deviceSwitch: Switch = itemView.findViewById(R.id.deviceSwitch1)
-        val deviceValueSwitch: Switch = itemView.findViewById(R.id.deviceSwitch2)
+        val autoSwitch: Switch = itemView.findViewById(R.id.autoSwitch)
+        val autoSwitchText: TextView = itemView.findViewById(R.id.autoSwitchText)
+        val valueSwitch: Switch = itemView.findViewById(R.id.valueSwitch)
         val deviceImage: ImageView = itemView.findViewById(R.id.imageIcon)
-
-        init {
-//            deviceSwitch.setOnCheckedChangeListener { _, isChecked ->
-//                onIsAutoSwitchClickListener(devices[adapterPosition], isChecked)
-//            }
-
-//            deviceValueSwitch.setOnCheckedChangeListener { _, isChecked ->
-//                onValueSwitchClickListener(devices[adapterPosition], isChecked)
-//            }
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceViewHolder {
@@ -48,8 +38,8 @@ class DeviceAdapter(
         val device = devices[position]
         holder.deviceName.text = device.name
         holder.deviceType.text = device.typeName
-        holder.deviceSwitch.isChecked = device.is_auto
-        holder.deviceValueSwitch.isChecked = device.value == 1.0
+        holder.autoSwitch.isChecked = device.is_auto
+        holder.valueSwitch.isChecked = device.value == 1.0
 
         // Set image based on device type
         when (device.device_type) {
@@ -63,21 +53,25 @@ class DeviceAdapter(
         // Thay đổi màu nền dựa trên giá trị của device.value
         // (Bạn có thể thêm logic ở đây nếu cần thiết)
 
-        // Cài đặt listener cho switch isAuto
-//        holder.deviceSwitch.setOnCheckedChangeListener(null) // Remove previous listener
-//        holder.deviceSwitch.isChecked = device.is_auto // Set checked state
-//        holder.deviceSwitch.setOnCheckedChangeListener { _, isChecked ->
-//            // Cập nhật trạng thái của thiết bị
-//            device.is_auto = isChecked
-//            // Gọi callback để thông báo về bên ngoài
-//            onIsAutoSwitchClickListener(device, isChecked)
-//        }
+        if (device.auto_available) {
+            // Cài đặt listener cho switch isAuto
+            holder.autoSwitch.isChecked = device.is_auto // Set checked state
+            holder.autoSwitch.setOnClickListener() { view  ->
+                val isChecked = holder.autoSwitch.isChecked
+                // Cập nhật trạng thái của thiết bị
+                device.is_auto = isChecked
+                // Gọi callback để thông báo về bên ngoài
+                onIsAutoSwitchClickListener(device, isChecked)
+            }
+        } else {
+            holder.autoSwitchText.visibility = View.GONE
+            holder.autoSwitch.visibility = View.GONE
+        }
 
         // Cài đặt listener cho switch value
-//        holder.deviceValueSwitch.setOnCheckedChangeListener(null)
-        holder.deviceValueSwitch.isChecked = device.value == 1.0 // Set checked state
-        holder.deviceValueSwitch.setOnClickListener() { view ->
-            val isChecked = holder.deviceValueSwitch.isChecked
+        holder.valueSwitch.isChecked = device.value == 1.0 // Set checked state
+        holder.valueSwitch.setOnClickListener() { view ->
+            val isChecked = holder.valueSwitch.isChecked
             Log.d("Device Update", "${device.id} $isChecked");
             // Cập nhật trạng thái của thiết bị
             device.value = if (isChecked) 1.0 else 0.0

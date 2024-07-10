@@ -92,7 +92,7 @@ class RootController : ViewModel() {
         val deviceListType = object : TypeToken<List<DeviceEntity>>() {}.type
         val devices: List<DeviceEntity> = gson.fromJson(data, deviceListType)
         return devices.map { device ->
-            DeviceEntity(device.device_id, device.type, device.value)
+            DeviceEntity(device.device_id, device.type, device.value, is_auto = device.is_auto, auto_available = device.auto_available)
         }
     }
 }

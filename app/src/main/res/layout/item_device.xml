@@ -104,6 +104,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/autoSwitchText"
                     android:textColor="@color/textColor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -111,7 +112,7 @@
                     android:text="Auto"
                     android:textAlignment="center" />
                 <Switch
-                    android:id="@+id/deviceSwitch1"
+                    android:id="@+id/autoSwitch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
@@ -135,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:text="On/Off" />
                 <Switch
-                    android:id="@+id/deviceSwitch2"
+                    android:id="@+id/valueSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:thumb="@drawable/custom_thumb"
