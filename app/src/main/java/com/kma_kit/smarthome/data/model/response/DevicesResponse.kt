@@ -6,4 +6,14 @@ data class Device(
     var is_auto: Boolean,
     val device_type: String,
     var value: Double
-)
+) {
+    public val typeName: String
+        get() = when (device_type) {
+            "bulb" -> "Bóng đèn"
+            "water" -> "Tưới nươớc"
+            "fan" -> "Qut"
+            "humidity" -> "Độ ẩm"
+            "temperature" -> "Nhiệt độ"
+            else -> "Không xác định"
+        }
+}
