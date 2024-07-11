@@ -51,17 +51,27 @@ class HomeFragment : Fragment() {
             devices.forEach { deviceEntity ->
                 when (deviceEntity.type) {
                     "humidity" -> humidityTextView.text = deviceEntity.value.toString() + "%"
-                    "temperature" -> temperatureTextView.text = deviceEntity.value.toString() + "°C"
-                    "gas" -> gasTextView.text = deviceEntity.value.toString() + "%"
-                    "bulb" -> {
-                        if (deviceEntity.value == 1) {
-                            totalLightsOn++
+                    "temperature" -> {
+                        temperatureTextView.text = deviceEntity.value.toString() + "°C"
+                        if (deviceEntity.value > 50) {
+                            temperatureTextView.setTextColor(resources.getColor(R.color.red))
+                        } else {
+                            temperatureTextView.setTextColor(resources.getColor(R.color.textColor))
                         }
-                        // Update other UI elements related to bulb if needed
                     }
+
+                    "gas" -> {
+                        gasTextView.text = deviceEntity.value.toString() + "%"
+                        if (deviceEntity.value > 30) {
+                            gasTextView.setTextColor(resources.getColor(R.color.red))
+                        } else {
+                            gasTextView.setTextColor(resources.getColor(R.color.textColor))
+                        }
+                    }
+
+                    "bulb" -> lightTextView.text = deviceEntity.value.toString()
                 }
             }
-            lightTextView.text = totalLightsOn.toString()
         })
 
         val tabLayout: TabLayout = view.findViewById(R.id.tabLayout)
@@ -102,53 +112,8 @@ class HomeFragment : Fragment() {
 
         return view
     }
-    private fun initData() {
-        lifecycleScope.launch {
-            try {
-                val response: Response<HomeResponse> = ApiClient.api.getDevices()
 
-                if (response.isSuccessful) {
-                    val homeResponse = response.body()
-                    homeResponse?.let { home ->
-                        var totalLightsOn = 0
-
-                        home.rooms.forEach { room ->
-                            val filteredDevices = room.devices.filter { device ->
-                                when (device.device_type) {
-                                    "temperature" -> {
-                                        temperatureTextView.text = "${device.value.toInt()}°C"
-                                        false
-                                    }
-                                    "humidity" -> {
-                                        humidityTextView.text = "${device.value.toInt()}%"
-                                        false
-                                    }
-                                    "gas" -> {
-                                        gasTextView.text = "${device.value.toInt()}%"
-                                        false
-                                    }
-                                    "bulb" -> {
-                                        if (device.value == 1.0) {
-                                            totalLightsOn++
-                                        }
-                                        true
-                                    }
-                                    else -> true
-                                }
-                            }
-                        }
-                        lightTextView.text = " $totalLightsOn"
-                    }
-                } else {
-                    println("API call failed: ${response.code()}")
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    fun listenEvent () {
+    fun listenEvent() {
         notificationIcon.setOnClickListener {
             var intent = Intent(context, NotificationsActivity::class.java)
             startActivity(intent)
