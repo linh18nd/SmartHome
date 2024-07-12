@@ -56,7 +56,7 @@ class DeviceAdapter(
         if (device.auto_available) {
             // Cài đặt listener cho switch isAuto
             holder.autoSwitch.isChecked = device.is_auto // Set checked state
-            holder.autoSwitch.setOnClickListener() { view  ->
+            holder.autoSwitch.setOnClickListener() { view ->
                 val isChecked = holder.autoSwitch.isChecked
                 // Cập nhật trạng thái của thiết bị
                 device.is_auto = isChecked
