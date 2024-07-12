@@ -62,7 +62,6 @@ class HomeFragment : Fragment() {
                             temperatureTextView.setTextColor(resources.getColor(R.color.textColor))
                         }
                     }
-
                     "gas" -> {
                         gasTextView.text = deviceEntity.value.toString() + "%"
                         if (deviceEntity.value > GAS_MIN_VALUE) {
@@ -120,6 +119,7 @@ class HomeFragment : Fragment() {
 
         return view
     }
+
     private fun initData() {
         lifecycleScope.launch {
             try {
@@ -166,7 +166,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun listenEvent () {
+    fun listenEvent() {
         notificationIcon.setOnClickListener {
             var intent = Intent(context, NotificationsActivity::class.java)
             startActivity(intent)
