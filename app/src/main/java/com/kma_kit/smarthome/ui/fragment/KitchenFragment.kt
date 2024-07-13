@@ -13,11 +13,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kma_kit.smarthome.R
+import com.kma_kit.smarthome.data.entity.DeviceEntity
 import com.kma_kit.smarthome.data.model.response.Device
 import com.kma_kit.smarthome.data.model.response.HomeResponse
 import com.kma_kit.smarthome.ui.adapter.DeviceAdapter
@@ -60,10 +62,24 @@ class KitchenFragment : Fragment() {
             }
         )
         recyclerView.adapter = deviceAdapter
-
+        rootController.devices.observe(viewLifecycleOwner, Observer { devices ->
+            refreshDataRealTime(devices)
+        })
         return view
     }
-
+    private fun refreshDataRealTime(devices: List<DeviceEntity>) {
+        // Cập nhật dữ liệu thời gian thực từ LiveData
+        val newDevices = listDevices.map { oldDev ->
+            val newDevice = devices.find { it.device_id == oldDev.id }
+            oldDev.copy(
+                value = newDevice?.value?.toDouble() ?: oldDev.value,
+                is_auto = newDevice?.is_auto ?: oldDev.is_auto
+            )
+        }
+        listDevices.clear()
+        listDevices.addAll(newDevices)
+        deviceAdapter.notifyDataSetChanged()
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (isAdded) {
