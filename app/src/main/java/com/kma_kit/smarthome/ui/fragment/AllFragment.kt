@@ -20,6 +20,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kma_kit.smarthome.R
+import com.kma_kit.smarthome.data.entity.DeviceEntity
 import com.kma_kit.smarthome.data.model.response.Device
 import com.kma_kit.smarthome.data.model.response.HomeResponse
 import com.kma_kit.smarthome.ui.adapter.DeviceAdapter
@@ -46,12 +47,7 @@ class AllFragment : Fragment() {
         recyclerView.adapter = deviceAdapter
 
         rootController.devices.observe(viewLifecycleOwner, Observer { devices ->
-            Log.d("AllFragment", "LiveData updated: $devices")
-            devices.forEach { deviceEntity ->
-                if (deviceEntity.type == "humidity") {
-                    Log.d("humidity", deviceEntity.toString())
-                }
-            }
+            refreshDataRealTime(devices)
         })
 
         LocalBroadcastManager.getInstance(requireContext())
@@ -59,6 +55,21 @@ class AllFragment : Fragment() {
         fetchAndDisplayDevices()
 
         return view
+    }
+
+
+    private fun refreshDataRealTime(devices: List<DeviceEntity>) {
+        // Cập nhật dữ liệu thời gian thực từ LiveData
+        val newDevices = listDevices.map { oldDev ->
+            val newDevice = devices.find { it.device_id == oldDev.id }
+            oldDev.copy(
+                value = newDevice?.value?.toDouble() ?: oldDev.value,
+                is_auto = newDevice?.is_auto ?: oldDev.is_auto
+            )
+        }
+        listDevices.clear()
+        listDevices.addAll(newDevices)
+        deviceAdapter.notifyDataSetChanged()
     }
 
     private fun fetchAndDisplayDevices() {
