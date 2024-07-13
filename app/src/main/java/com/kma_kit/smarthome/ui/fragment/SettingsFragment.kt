@@ -80,6 +80,8 @@ class SettingsFragment : Fragment() {
 
         val preferencesHelper = PreferencesHelper.getInstance()
         enableDarkMode.isChecked = preferencesHelper.enableDarkMode
+        enableNoti.isChecked = preferencesHelper.enableNotification
+
 
         try {
             val inputStream = requireContext().assets.open("img_avatar.png")
@@ -95,27 +97,31 @@ class SettingsFragment : Fragment() {
 
     private fun listenerEvent() {
         enableNoti.setOnCheckedChangeListener { _, isChecked ->
-            lifecycleScope.launch {
-                var fcmToken = ""
-                if (isChecked) {
-                    fcmToken = getToken()
-                }
+//            lifecycleScope.launch {
+//                var fcmToken = ""
+//                if (isChecked) {
+//                    fcmToken = getToken()
+//                }
+//
+//                val user = rootController.userInfo.value
+//                val updatedUser = user?.let {
+//                    UpdateUser(
+//                        it.first_name,
+//                        user.last_name,
+//                        user.date_of_birth,
+//                        user.gender,
+//                        fcmToken
+//                    )
+//                }
+//
+//                if (updatedUser != null) {
+//                    rootController.updateUserInfo(updatedUser)
+//                }
+//            }
+            val preferencesHelper = PreferencesHelper.getInstance()
+            preferencesHelper.enableNotification = isChecked
 
-                val user = rootController.userInfo.value
-                val updatedUser = user?.let {
-                    UpdateUser(
-                        it.first_name,
-                        user.last_name,
-                        user.date_of_birth,
-                        user.gender,
-                        fcmToken
-                    )
-                }
 
-                if (updatedUser != null) {
-                    rootController.updateUserInfo(updatedUser)
-                }
-            }
         }
 
         enableDarkMode.setOnCheckedChangeListener { _, isChecked ->

@@ -1,5 +1,6 @@
 package com.kma_kit.smarthome.services.fcm
 
+import PreferencesHelper
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -29,7 +30,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         remoteMessage.notification?.let {
             Log.d(TAG, "Message Notification Body: ${it.body}")
             if (it.body != null && it.body != "update") {
-                showNotification(it.title ?: "FCM Message", it.body ?: "")
+                val preferencesHelper = PreferencesHelper.getInstance()
+                if (preferencesHelper.enableNotification)
+                {
+                    showNotification(it.title ?: "FCM Message", it.body ?: "")
+                }
+
             }
         }
     }
