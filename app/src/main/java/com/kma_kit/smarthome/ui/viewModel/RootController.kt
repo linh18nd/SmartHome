@@ -80,14 +80,11 @@ class RootController : ViewModel() {
             }
             _numberOfLightsOn.postValue(totalLightsOn)
 
-            Log.d("RootController", "Devices updated successfully")
         } catch (e: Exception) {
-            Log.e("RootController", "Failed to update devices", e)
         }
     }
 
     private fun parseData(data: String): List<DeviceEntity> {
-        Log.d("RootController", "Parsing data: $data")
         val gson = Gson()
         val deviceListType = object : TypeToken<List<DeviceEntity>>() {}.type
         val devices: List<DeviceEntity> = gson.fromJson(data, deviceListType)

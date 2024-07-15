@@ -49,7 +49,6 @@ class HomeFragment : Fragment() {
         dateTextView.text = currentDate
     initData()
         rootController.devices.observe(viewLifecycleOwner, Observer { devices ->
-            Log.d("HomeFragment", "LiveData updated: $devices")
             var totalLightsOn = 0
             devices.forEach { deviceEntity ->
                 when (deviceEntity.type) {

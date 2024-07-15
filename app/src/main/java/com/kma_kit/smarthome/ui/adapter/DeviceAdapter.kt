@@ -73,6 +73,7 @@ class DeviceAdapter(
         holder.valueSwitch.setOnClickListener() { view ->
             val isChecked = holder.valueSwitch.isChecked
             Log.d("Device Update", "${device.id} $isChecked");
+            holder.autoSwitch.isChecked = false
             // Cập nhật trạng thái của thiết bị
             device.value = if (isChecked) 1.0 else 0.0
             // Gọi callback để thông báo về bên ngoài

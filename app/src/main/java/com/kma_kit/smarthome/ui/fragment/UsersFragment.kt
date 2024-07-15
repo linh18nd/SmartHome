@@ -59,10 +59,8 @@ class UsersFragment : Fragment() {
                 genderTextView.text = "Male"
             } else genderTextView.text = "Female"
             emailTextView.text = it.email
-
         }
         rootController.devices.observe(viewLifecycleOwner, Observer { devices ->
-            Log.d("UserFragment", "LiveData updated: $devices")
             devices.forEach { deviceEntity ->
                 if (deviceEntity.type == "humidity") {
                     Log.d("humidity", deviceEntity.toString())

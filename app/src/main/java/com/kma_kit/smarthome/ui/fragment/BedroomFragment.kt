@@ -153,7 +153,7 @@ class BedroomFragment : Fragment() {
                 val newValue = if (isChecked) 1.0 else 0.0
                 val response = ApiClient.api.updateDeviceState(
                     device.id,
-                    UpdateDeviceRequest(device.is_auto, newValue)
+                    UpdateDeviceRequest(is_auto = false, value = newValue)
                 )
                 if (response.isSuccessful) {
                     Log.d("BedroomFragment", "Device value updated successfully")

@@ -129,7 +129,7 @@ class AllFragment : Fragment() {
             try {
                 val response = ApiClient.api.updateDeviceState(
                     device.id,
-                    UpdateDeviceRequest(device.is_auto, newValue.toDouble())
+                    UpdateDeviceRequest(false, newValue.toDouble())
                 )
                 if (response.isSuccessful) {
                     println("Device value state updated successfully")
@@ -145,7 +145,6 @@ class AllFragment : Fragment() {
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.getStringExtra("message")?.let { message ->
-                Log.d("AllFragment", "Broadcast received: $message")
                 rootController.updateDevices(message)
             }
         }
