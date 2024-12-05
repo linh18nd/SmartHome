@@ -57,4 +57,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.lottie)
     implementation(libs.firebaseMessaging)
+    debugImplementation(libs.leakcanary.android)
 }

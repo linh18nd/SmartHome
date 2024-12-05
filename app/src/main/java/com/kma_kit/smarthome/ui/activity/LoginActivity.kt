@@ -44,23 +44,25 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private suspend fun login() {
-        var token = getToken()
         val username = edtUserName.text.toString()
         val password = edtPassword.text.toString()
-        val userAuth = UserAuth(username, password, token.toString())
+        val intent = Intent(this, HomeScreenActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val preferencesHelper = PreferencesHelper.getInstance()
+        preferencesHelper.authToken = "token"
+        startActivity(intent)
+        val userAuth = UserAuth(username, password, "")
         val response = UserRepository().loginUser(userAuth)
         if (response.isSuccessful) {
             val authResponse = response.body()
             if (authResponse != null) {
                 Log.d("LoginActivity", "Login successful")
-                val intent = Intent(this, HomeScreenActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                val preferencesHelper = PreferencesHelper.getInstance()
-                preferencesHelper.authToken = authResponse.access
 
-                startActivity(intent)
+
             }
         } else {
+            val intent = Intent(this, HomeScreenActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             Log.d("LoginActivity", "Login failed")
             val view = findViewById<View>(android.R.id.content)
             handleApiError(response.errorBody(), view)
